@@ -115,7 +115,7 @@ class Game():
 
     def display_score(self):
         scoreSurf, scoreRect = text_object("Score: " + str(int(self.score)), "Orbitron", 20, colors.textColor)
-        scoreRect.topleft = (10, 10)
+        scoreRect.topleft = (10, 5)
 
         self.screen.blit(scoreSurf, scoreRect)
 
@@ -151,6 +151,7 @@ class Game():
                 menu = Start_Menu()
             elif name == "over":
                 menu = Game_Over_Menu()
+                menu.final_score(str(int(self.score)), self.screen)
             menu.render(self.screen)
 
             for event in pygame.event.get():
@@ -187,11 +188,11 @@ class Game():
                     self.quit_game()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE or event.key == pygame.K_r:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_c:
                         return
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if menu.resumeBtn.inButton():
+                    if menu.continueBtn.inButton():
                         return
                     if menu.quitBtn.inButton():
                         self.quit_game()
@@ -244,5 +245,4 @@ class Game():
 
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
+    Game().run()
