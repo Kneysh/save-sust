@@ -1,7 +1,8 @@
 import pygame
 import time
-from random import randint, randrange, choice
-from screens import start, pause, over
+from random import randint
+# from screens import start, pause, over
+from screens.menu import Start_Menu, Pause_Menu, Game_Over_Menu
 from utils.functions import load_image, text_object
 from utils import colors
 
@@ -110,10 +111,7 @@ class Game():
 
         self.score = 0
 
-        self.gameOver = False
-
-    def game_over(self):
-        pass
+        self.gameOver = True
 
     def display_score(self):
         scoreSurf, scoreRect = text_object("Score: " + str(int(self.score)), "Orbitron", 20, colors.textColor)
@@ -133,14 +131,86 @@ class Game():
             self.obstacleGroup.empty()
             return True
         return False
-        
+
+    def quit_game(self):
+        pygame.quit()
+        quit()
+
+    def reset(self):
+        self.obstacleGroup.empty()
+        self.spawn_obstacles()
+        self.score = 0
+        self.backgroundY = self.displayHeight - 1536
+        self.player.empty()
+        self.player.add(Player())
+
+    def menu_screen(self, name):
+        self.screen.blit(self.background, (0, 0))
+        while True:
+            if name == "start":
+                menu = Start_Menu()
+            elif name == "over":
+                menu = Game_Over_Menu()
+            menu.render(self.screen)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.quit_game()
+                
+                if event.type == pygame.KEYDOWN:
+                    if (event.key == pygame.K_p and name == "start") or (event.key == pygame.K_r and name == "over"):
+                        self.reset()
+                        return False
+                    if event.key == pygame.K_q:
+                        self.quit_game()
+                    
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if name == "start" and menu.playBtn.inButton():
+                        self.reset()
+                        return False
+                    elif name == "over" and menu.restartBtn.inButton():
+                        self.reset()
+                        return False
+                    if menu.quitBtn.inButton():
+                        self.quit_game()
+            
+            pygame.display.update()
+            self.clock.tick(15)
+
+    def pause(self):
+        while True:
+            menu = Pause_Menu()
+            menu.render(self.screen)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.quit_game()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_r:
+                        return
+                    
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if menu.resumeBtn.inButton():
+                        return
+                    if menu.quitBtn.inButton():
+                        self.quit_game()
+
+            pygame.display.update()
+            self.clock.tick(15)
+
 
     def run(self):
+        self.gameOver = self.menu_screen(name="start")
 
         while not self.gameOver:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.gameOver = True
+                    self.quit_game()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_p:
+                        self.pause()
 
             # moving background
             self.backgroundRect = self.background.get_rect(topleft = (0, self.backgroundY))
@@ -157,7 +227,8 @@ class Game():
             self.player.update()
 
             # check collision
-            self.gameOver = self.collision()
+            if self.collision():
+                self.gameOver = self.menu_screen(name="over")
 
             # obstacles
             self.obstacleGroup.draw(self.screen)
@@ -171,10 +242,7 @@ class Game():
             pygame.display.update()
             self.clock.tick(60)
 
-        # return
-        # pygame.quit()
-        # quit()
-
 
 if __name__ == "__main__":
-    Game().run()
+    game = Game()
+    game.run()
