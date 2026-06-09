@@ -2,7 +2,7 @@ import pygame
 import time
 from random import randint, randrange, choice
 from screens import start, pause, over
-from utils.functions import load_image
+from utils.functions import load_image, text_object
 from utils import colors
 
 
@@ -53,9 +53,25 @@ class Player(pygame.sprite.Sprite):
 
 # obstacles class
 class Obstacles(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, obs:str):
         super().__init__()
+        
+        if obs == "missile":
+            self.image = load_image("missile.png")
+            self.top = -(randint(400, 600))
+            self.rect = self.image.get_rect(midtop=(randint(50, 750), self.top))
+            self.speed = randint(5, 9)
+        elif obs == "bomb":
+            self.image = load_image("bomb.png")
+            self.top = -500
+            self.rect = self.image.get_rect(midtop=(randint(50, 750), self.top))
+            self.speed = 9
 
+
+    def update(self):
+        self.rect.top += self.speed
+        if self.rect.top > 600:
+            self.rect.midbottom = (randint(50, 750), -10)
 
 
 
@@ -82,6 +98,9 @@ class Game():
 
 
         # groups
+        self.obstacleGroup = pygame.sprite.Group()
+        self.spawn_obstacles()
+
         self.player = pygame.sprite.GroupSingle()
         self.player.add(Player())
 
@@ -89,7 +108,32 @@ class Game():
         self.y_change = 0
         self.playerSpeed = 5
 
+        self.score = 0
+
         self.gameOver = False
+
+    def game_over(self):
+        pass
+
+    def display_score(self):
+        scoreSurf, scoreRect = text_object("Score: " + str(int(self.score)), "Orbitron", 20, colors.textColor)
+        scoreRect.topleft = (10, 10)
+
+        self.screen.blit(scoreSurf, scoreRect)
+
+    def calc_score(self):
+        pass
+
+    def spawn_obstacles(self):
+        for obs in ["missile", "missile", "bomb", "missile"]:
+            self.obstacleGroup.add(Obstacles(obs))
+
+    def collision(self):
+        if pygame.sprite.spritecollide(self.player.sprite, self.obstacleGroup, True):
+            self.obstacleGroup.empty()
+            return True
+        return False
+        
 
     def run(self):
 
@@ -112,11 +156,24 @@ class Game():
             self.player.draw(self.screen)
             self.player.update()
 
+            # check collision
+            self.gameOver = self.collision()
+
+            # obstacles
+            self.obstacleGroup.draw(self.screen)
+            self.obstacleGroup.update()
+
+
+            # score-card
+            self.display_score()
+
+            self.score += (1 / 60)
             pygame.display.update()
             self.clock.tick(60)
 
-        pygame.quit()
-        quit()
+        # return
+        # pygame.quit()
+        # quit()
 
 
 if __name__ == "__main__":
