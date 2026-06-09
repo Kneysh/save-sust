@@ -88,6 +88,9 @@ class Game():
         pygame.display.set_caption("Save Sust")
         self.screen = pygame.display.set_mode((800, 600))
 
+        # music and sfx
+        self.crashSound = pygame.mixer.Sound("assets/sounds/crash.wav")
+
         # frame-per-second
         self.clock = pygame.time.Clock()
 
@@ -128,6 +131,9 @@ class Game():
 
     def collision(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.obstacleGroup, True):
+            pygame.mixer.music.stop()
+            pygame.mixer.Sound.play(self.crashSound)
+            time.sleep(1)
             self.obstacleGroup.empty()
             return True
         return False
@@ -179,6 +185,8 @@ class Game():
             self.clock.tick(15)
 
     def pause(self):
+        pygame.mixer.music.pause()
+
         while True:
             menu = Pause_Menu()
             menu.render(self.screen)
@@ -189,10 +197,12 @@ class Game():
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_c:
+                        pygame.mixer.music.unpause()
                         return
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if menu.continueBtn.inButton():
+                        pygame.mixer.music.unpause()
                         return
                     if menu.quitBtn.inButton():
                         self.quit_game()
@@ -202,7 +212,12 @@ class Game():
 
 
     def run(self):
+        # start screen
         self.gameOver = self.menu_screen(name="start")
+
+        # background music
+        pygame.mixer.music.load("assets/sounds/bgm.mp3")
+        pygame.mixer.music.play(-1)
 
         while not self.gameOver:
             for event in pygame.event.get():
@@ -229,6 +244,7 @@ class Game():
 
             # check collision
             if self.collision():
+                # game-over screen
                 self.gameOver = self.menu_screen(name="over")
 
             # obstacles
