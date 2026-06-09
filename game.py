@@ -28,11 +28,20 @@ class Game():
         pygame.init()
 
         # display
+        self.displayWidth = 800
+        self.displayHeight = 600
+
         pygame.display.set_caption("Save Sust")
         self.screen = pygame.display.set_mode((800, 600))
 
         # frame-per-second
         self.clock = pygame.time.Clock()
+
+        # background image
+        self.background = load_image("background.png")
+        # self.backgroundRect = self.background.get_rect()
+        self.backgroundMove = 5
+        self.backgroundY = self.displayHeight - 1536
 
         self.gameOver = False
 
@@ -43,7 +52,17 @@ class Game():
                 if event.type == pygame.QUIT:
                     self.gameOver = True
 
-            self.screen.fill("White")
+            # moving background
+            self.backgroundRect = self.background.get_rect(topleft = (0, self.backgroundY))
+            self.screen.blit(self.background, self.backgroundRect)
+            self.backgroundY += self.backgroundMove
+
+            if self.backgroundY > 0:
+                self.backgroundY = self.displayHeight - 1536
+
+
+
+
             pygame.display.update()
             self.clock.tick(60)
 
