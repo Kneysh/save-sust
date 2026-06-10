@@ -60,9 +60,9 @@ class Game_Over_Menu(Menu):
         self.quitBtn.activeColor = "Red"
         self.quitBtn.inactiveColor = (200, 0, 0)
 
-    def final_score(self, finalScore, surface):
+    def final_score(self, finalScore, highScore, surface):
         self.finalScore = Message()
-        self.finalScore.text = "Final Score: " + finalScore
+        self.finalScore.text = "Final Score: " + finalScore + "\nHighest: " + highScore
         self.finalScore.font = "Orbitron"
         self.finalScore.size = 30
         self.finalScore.color = colors.textColor

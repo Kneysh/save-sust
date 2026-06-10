@@ -3,6 +3,7 @@ import time
 from random import randint
 from utils.menu import Start_Menu, Pause_Menu, Game_Over_Menu
 from utils.functions import load_image, text_object
+from utils.highscore import High_Score
 from utils import colors
 
 
@@ -122,6 +123,8 @@ class Game():
         self.y_change = 0
         self.playerSpeed = 5
 
+        # scores
+        self.highScore = High_Score().load_highest()
         self.score = 0
 
         self.gameOver = True
@@ -165,7 +168,10 @@ class Game():
                 menu = Start_Menu()
             elif name == "over":
                 menu = Game_Over_Menu()
-                menu.final_score(str(int(self.score)), self.screen)
+                if self.score > self.highScore:
+                    self.highScore = int(self.score)
+                    High_Score().save_highest(self.highScore)
+                menu.final_score(str(int(self.score)), str(self.highScore), self.screen)
             menu.render(self.screen)
 
             for event in pygame.event.get():
