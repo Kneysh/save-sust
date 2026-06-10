@@ -11,8 +11,6 @@ class Button():
         self.inactiveColor = inactiveColor
         self.bgImg = bgImg
         self.pos = pos
-        # self.x_pos = self.pos[0]
-        # self.y_pos = self.pos[1]
         self.text = text
         self.textSize = textSize
         self.textFont = textFont

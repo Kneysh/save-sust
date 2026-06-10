@@ -43,8 +43,7 @@ class Start_Menu(Menu):
         self.quitBtn.text = "Quit"
         self.quitBtn.activeColor = "Red"
         self.quitBtn.inactiveColor = (200, 0, 0)
-
-    
+   
 
 class Game_Over_Menu(Menu):
     def __init__(self):

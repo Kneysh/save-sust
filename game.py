@@ -1,7 +1,7 @@
 import pygame
 import time
 from random import randint
-from screens.menu import Start_Menu, Pause_Menu, Game_Over_Menu
+from utils.menu import Start_Menu, Pause_Menu, Game_Over_Menu
 from utils.functions import load_image, text_object
 from utils import colors
 
