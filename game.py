@@ -93,6 +93,9 @@ class Game():
         self.displayWidth = 800
         self.displayHeight = 600
 
+        self.icon = load_image("icon.png")
+        pygame.display.set_icon(self.icon)
+        
         pygame.display.set_caption("Save Sust")
         self.screen = pygame.display.set_mode((self.displayWidth, self.displayHeight))
 
