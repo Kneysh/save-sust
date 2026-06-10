@@ -46,7 +46,7 @@ class Game_Over_Menu(Menu):
         super().__init__(message="SUST DESTROYED", info="Press 'R' to retry or 'L' to let die")
 
 
-        self.message.color = colors.lightRed
+        self.message.color = colors.red
         self.message.size = 80
 
         self.btnOne.text = "Retry"
