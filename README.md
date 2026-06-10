@@ -52,11 +52,10 @@ Your goal is to survive as long as possible while the survival-time increases.
 
 ### Controls
 
-- `P` at the start screen: begin the game
-- `Q` at any menu: quit the game
+- `S` at the start screen: begin the game
+- `L` at any menu: quit the game
 - Arrow keys: move the player up, down, left, and right
-- `Space` or `P` during gameplay: pause the game
-- `Space` or `C` in the pause menu: resume play
+- `Space` or `K` during gameplay: pause the game and resume play
 - `R` on the game-over screen: restart the game
 
 ### Gameplay Notes
