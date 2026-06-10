@@ -8,10 +8,13 @@ from utils import colors
 
 # player class
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, displayWidth, displayHeight):
         super().__init__()
+        self.displayWidth, self.displayHeight = displayWidth, displayHeight
+
         self.image = load_image("sust.png")
-        self.rect = self.image.get_rect(midbottom=(400,590))
+        self.initPos = ((self.displayWidth / 2), (displayHeight - 10))
+        self.rect = self.image.get_rect(midbottom=self.initPos)
         self.mask = pygame.mask.from_surface(self.image)
         self.imageWidth = 100
         self.imageHeight = 100
@@ -25,23 +28,23 @@ class Player(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
 
-        if keys[pygame.K_RIGHT] and self.rect.right <= 800:
+        if keys[pygame.K_RIGHT] and self.rect.right <= self.displayWidth:
             self.x_change = (self.playerSpeed)
         if keys[pygame.K_LEFT] and self.rect.left >= 0:
-            self.x_change = -(self.playerSpeed)
-        if keys[pygame.K_DOWN] and self.rect.bottom <= 600:
+            self.x_change = 0 - (self.playerSpeed)
+        if keys[pygame.K_DOWN] and self.rect.bottom <= self.displayHeight:
             self.y_change = (self.playerSpeed)
         if keys[pygame.K_UP] and self.rect.top >= 0:
-            self.y_change = -(self.playerSpeed)
+            self.y_change = 0 - (self.playerSpeed)
     
     def move(self):
         self.rect.left += self.x_change
         self.rect.top += self.y_change
 
-        if self.rect.bottom >= 600:
-            self.rect.bottom = 600
-        if self.rect.right >= 800:
-            self.rect.right = 800
+        if self.rect.bottom >= self.displayHeight:
+            self.rect.bottom = self.displayHeight
+        if self.rect.right >= self.displayWidth:
+            self.rect.right = self.displayWidth
         if self.rect.top <= 0:
             self.rect.top = 0
         if self.rect.left <= 0:
@@ -54,18 +57,20 @@ class Player(pygame.sprite.Sprite):
 
 # obstacles class
 class Obstacles(pygame.sprite.Sprite):
-    def __init__(self, obs:str):
+    def __init__(self, obs:str, displayWidth:int, displayHeight:int):
         super().__init__()
+        self.displayWidth, self.displayHeight = displayWidth, displayHeight
+        self.rangeX = (50, (displayWidth - 50)) 
         
         if obs == "missile":
             self.image = load_image("missile.png")
-            self.top = -(randint(400, 600))
-            self.rect = self.image.get_rect(midtop=(randint(50, 750), self.top))
+            self.top = 0 - (randint(400, 600))
+            self.rect = self.image.get_rect(midtop=(randint(*self.rangeX), self.top))
             self.speed = randint(5, 9)
         elif obs == "bomb":
             self.image = load_image("bomb.png")
             self.top = -500
-            self.rect = self.image.get_rect(midtop=(randint(50, 750), self.top))
+            self.rect = self.image.get_rect(midtop=(randint(*self.rangeX), self.top))
             self.speed = 9
 
         self.mask = pygame.mask.from_surface(self.image)
@@ -73,8 +78,8 @@ class Obstacles(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.top += self.speed
-        if self.rect.top > 600:
-            self.rect.midbottom = (randint(50, 750), -10)
+        if self.rect.top > self.displayHeight:
+            self.rect.midbottom = (randint(*self.rangeX), -10)
 
 
 
@@ -88,7 +93,7 @@ class Game():
         self.displayHeight = 600
 
         pygame.display.set_caption("Save Sust")
-        self.screen = pygame.display.set_mode((800, 600))
+        self.screen = pygame.display.set_mode((self.displayWidth, self.displayHeight))
 
         # music and sfx
         pygame.mixer.init()
@@ -102,7 +107,8 @@ class Game():
         self.background = load_image("background.png")
         # self.backgroundRect = self.background.get_rect()
         self.backgroundMove = 3
-        self.backgroundY = self.displayHeight - 1536
+        self.backgroundHeight = 1536
+        self.backgroundY = self.displayHeight - self.backgroundHeight
 
 
         # groups
@@ -110,7 +116,7 @@ class Game():
         self.spawn_obstacles()
 
         self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player())
+        self.player.add(Player(self.displayWidth, self.displayHeight))
 
         self.x_change = 0
         self.y_change = 0
@@ -129,7 +135,7 @@ class Game():
 
     def spawn_obstacles(self):
         for obs in ["missile", "missile", "bomb", "missile"]:
-            self.obstacleGroup.add(Obstacles(obs))
+            self.obstacleGroup.add(Obstacles(obs, self.displayWidth, self.displayHeight))
 
     def collision(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.obstacleGroup, True, pygame.sprite.collide_mask):
@@ -148,9 +154,9 @@ class Game():
         self.obstacleGroup.empty()
         self.spawn_obstacles()
         self.score = 0
-        self.backgroundY = self.displayHeight - 1536
+        self.backgroundY = self.displayHeight - self.backgroundHeight
         self.player.empty()
-        self.player.add(Player())
+        self.player.add(Player(self.displayWidth, self.displayHeight))
 
     def menu_screen(self, name):
         self.screen.blit(self.background, (0, 0))
