@@ -91,6 +91,8 @@ class Game():
         self.screen = pygame.display.set_mode((800, 600))
 
         # music and sfx
+        pygame.mixer.init()
+        pygame.mixer.music.load("assets/sounds/bgm.mp3")
         self.crashSound = pygame.mixer.Sound("assets/sounds/crash.wav")
 
         # frame-per-second
@@ -119,13 +121,11 @@ class Game():
         self.gameOver = True
 
     def display_score(self):
+        self.score += (1 / 60)
         scoreSurf, scoreRect = text_object("Score: " + str(int(self.score)), "Orbitron", 20, colors.textColor)
         scoreRect.topleft = (10, 5)
 
         self.screen.blit(scoreSurf, scoreRect)
-
-    def calc_score(self):
-        pass
 
     def spawn_obstacles(self):
         for obs in ["missile", "missile", "bomb", "missile"]:
@@ -175,7 +175,6 @@ class Game():
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if name == "start" and menu.playBtn.inButton():
-                        self.reset()
                         return False
                     elif name == "over" and menu.restartBtn.inButton():
                         self.reset()
@@ -216,9 +215,6 @@ class Game():
     def run(self):
         # start screen
         self.gameOver = self.menu_screen(name="start")
-
-        # background music
-        pygame.mixer.music.load("assets/sounds/bgm.mp3")
         pygame.mixer.music.play(-1)
 
         while not self.gameOver:
@@ -244,20 +240,20 @@ class Game():
             self.player.draw(self.screen)
             self.player.update()
 
+            # obstacles
+            self.obstacleGroup.draw(self.screen)
+            self.obstacleGroup.update()
+
             # check collision
             if self.collision():
                 # game-over screen
                 self.gameOver = self.menu_screen(name="over")
-
-            # obstacles
-            self.obstacleGroup.draw(self.screen)
-            self.obstacleGroup.update()
+                pygame.mixer.music.play(-1)
 
 
             # score-card
             self.display_score()
 
-            self.score += (1 / 60)
             pygame.display.update()
             self.clock.tick(60)
 
