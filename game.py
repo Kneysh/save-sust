@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.displayWidth, self.displayHeight = displayWidth, displayHeight
 
         self.image = load_image("sust.png")
-        self.initPos = ((self.displayWidth / 2), (displayHeight - 10))
+        self.initPos = ((self.displayWidth / 2), (self.displayHeight - 10))
         self.rect = self.image.get_rect(midbottom=self.initPos)
         self.mask = pygame.mask.from_surface(self.image)
         self.imageWidth = 100
