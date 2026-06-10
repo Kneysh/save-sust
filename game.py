@@ -159,7 +159,7 @@ class Game():
     def reset(self):
         self.obstacleGroup.empty()
         self.spawn_obstacles()
-        self.score = 0
+        self.totalTime = 0
         self.backgroundY = self.displayHeight - self.backgroundHeight
         self.player.empty()
         self.player.add(Player(self.displayWidth, self.displayHeight))
