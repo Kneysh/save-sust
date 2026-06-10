@@ -1,6 +1,4 @@
-import pygame
 from utils import colors
-from utils.functions import text_object, draw_block
 from utils.buttons import Button
 from utils.message import Message
 
@@ -31,60 +29,56 @@ class Menu():
 
 class Start_Menu(Menu):
     def __init__(self):
-        super().__init__(message="SAVE SUST", info="Press 'P' to play or 'Q' to quit")
-        self.playBtn = self.btnOne
-        self.quitBtn = self.btnTwo
+        super().__init__(message="SAVE SUST", info="Press 'S' to save or 'L' to let die")
 
         self.message.color = "Green"
         self.message.size = 100
 
-        self.playBtn.text = "Play"
+        self.btnOne.text = "Save"
 
-        self.quitBtn.text = "Quit"
-        self.quitBtn.activeColor = "Red"
-        self.quitBtn.inactiveColor = (200, 0, 0)
+        self.btnTwo.text = "Let Die"
+        self.btnTwo.activeColor = "Red"
+        self.btnTwo.inactiveColor = (200, 0, 0)
    
 
 class Game_Over_Menu(Menu):
     def __init__(self):
-        super().__init__(message="GAME OVER", info="Press 'R' to restart or 'Q' to quit")
-        self.restartBtn = self.btnOne
-        self.quitBtn = self.btnTwo
+        super().__init__(message="SUST DESTROYED", info="Press 'R' to retry or 'L' to let die")
+
 
         self.message.color = "Red"
-        self.message.size = 100
+        self.message.size = 80
 
-        self.restartBtn.text = "Restart"
+        self.btnOne.text = "Retry"
 
-        self.quitBtn.text = "Quit"
-        self.quitBtn.activeColor = "Red"
-        self.quitBtn.inactiveColor = (200, 0, 0)
+        self.btnTwo.text = "Let Die"
+        self.btnTwo.activeColor = "Red"
+        self.btnTwo.inactiveColor = (200, 0, 0)
 
-    def final_score(self, finalScore, highScore, surface):
-        self.finalScore = Message()
-        self.finalScore.text = "Final Score: " + finalScore + "\nHighest: " + highScore
-        self.finalScore.font = "Orbitron"
-        self.finalScore.size = 30
-        self.finalScore.color = colors.textColor
-        self.finalScore.pos = (400, 350)
+    def final_time(self, totalTime, highestTime, surface):
+        self.finalTime = Message()
+        self.finalTime.text = f"Survived: {totalTime} s\nHighest: {highestTime} s"
+        self.finalTime.font = "Orbitron"
+        self.finalTime.size = 30
+        self.finalTime.color = colors.textColor
+        self.finalTime.pos = (400, 350)
 
-        self.finalScore.render(surface)
+        self.finalTime.render(surface)
 
         
 class Pause_Menu(Menu):
     def __init__(self):
-        super().__init__(message="PAUSED", info="Press 'C' or 'Spacebar' to continue or 'Q' to quit")
-        self.continueBtn = self.btnOne
-        self.quitBtn = self.btnTwo
+        super().__init__(message="PAUSED", info="Press 'K' or 'Spacebar' to continue or 'L' to let die")
 
         self.message.color = "Yellow"
         self.message.size = 100
 
-        self.continueBtn.text = "Continue"
+        self.btnOne.text = "Keep Saving"
+        self.btnOne.width = 130
 
-        self.quitBtn.text = "Quit"
-        self.quitBtn.activeColor = "Red"
-        self.quitBtn.inactiveColor = (200, 0, 0)
+        self.btnTwo.text = "Let Die"
+        self.btnTwo.activeColor = "Red"
+        self.btnTwo.inactiveColor = (200, 0, 0)
 
             
 

@@ -3,7 +3,7 @@ import time
 from random import randint
 from utils.menu import Start_Menu, Pause_Menu, Game_Over_Menu
 from utils.functions import load_image, text_object
-from utils.highscore import High_Score
+from utils.highest_time import Highest_Time
 from utils import colors
 
 
@@ -127,14 +127,14 @@ class Game():
         self.playerSpeed = 5
 
         # scores
-        self.highScore = High_Score().load_highest()
-        self.score = 0
+        self.highestTime = Highest_Time().load_highest()
+        self.totalTime = 0
 
         self.gameOver = True
 
     def display_score(self):
-        self.score += (1 / 60)
-        scoreSurf, scoreRect = text_object("Score: " + str(int(self.score)), "Orbitron", 20, colors.textColor)
+        self.totalTime += (1 / 60)
+        scoreSurf, scoreRect = text_object(f"Survived: {int(self.totalTime)} s", "Orbitron", 20, colors.textColor)
         scoreRect.topleft = (10, 5)
 
         self.screen.blit(scoreSurf, scoreRect)
@@ -171,10 +171,10 @@ class Game():
                 menu = Start_Menu()
             elif name == "over":
                 menu = Game_Over_Menu()
-                if self.score > self.highScore:
-                    self.highScore = int(self.score)
-                    High_Score().save_highest(self.highScore)
-                menu.final_score(str(int(self.score)), str(self.highScore), self.screen)
+                if self.totalTime > self.highestTime:
+                    self.highestTime = int(self.totalTime)
+                    Highest_Time().save_highest(self.highestTime)
+                menu.final_time(str(int(self.totalTime)), str(self.highestTime), self.screen)
             menu.render(self.screen)
 
             for event in pygame.event.get():
@@ -182,19 +182,17 @@ class Game():
                     self.quit_game()
                 
                 if event.type == pygame.KEYDOWN:
-                    if (event.key == pygame.K_p and name == "start") or (event.key == pygame.K_r and name == "over"):
+                    if (event.key == pygame.K_s and name == "start") or (event.key == pygame.K_r and name == "over"):
                         self.reset()
                         return False
-                    if event.key == pygame.K_q:
+                    if event.key == pygame.K_l:
                         self.quit_game()
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if name == "start" and menu.playBtn.inButton():
-                        return False
-                    elif name == "over" and menu.restartBtn.inButton():
+                    if menu.btnOne.inButton():
                         self.reset()
                         return False
-                    if menu.quitBtn.inButton():
+                    if menu.btnTwo.inButton():
                         self.quit_game()
             
             pygame.display.update()
@@ -212,15 +210,17 @@ class Game():
                     self.quit_game()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE or event.key == pygame.K_c:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_k:
                         pygame.mixer.music.unpause()
                         return
+                    if event.key == pygame.K_l:
+                        self.quit_game()
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if menu.continueBtn.inButton():
+                    if menu.btnOne.inButton():
                         pygame.mixer.music.unpause()
                         return
-                    if menu.quitBtn.inButton():
+                    if menu.btnTwo.inButton():
                         self.quit_game()
 
             pygame.display.update()
@@ -238,7 +238,7 @@ class Game():
                     self.quit_game()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE or event.key == pygame.K_p:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_k:
                         self.pause()
 
             # moving background

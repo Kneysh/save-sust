@@ -4,7 +4,7 @@ from utils.functions import text_object, draw_block
 
 
 class Button():
-    def __init__(self, width=100, height=50, activeColor=colors.lightBlue, inactiveColor=colors.blue, bgImg=None, pos=(0,0), text="Button", textSize=20, textFont="Roboto", textColor="White"):
+    def __init__(self, width=100, height=50, activeColor=colors.lightBlue, inactiveColor=colors.blue, bgImg=None, pos=(0,0), text="Button", textSize=20, textFont="Roboto", textColor=colors.textColor):
         self.width = width
         self.height = height
         self.activeColor = activeColor
