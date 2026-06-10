@@ -1,7 +1,6 @@
 import pygame
 import time
 from random import randint
-# from screens import start, pause, over
 from screens.menu import Start_Menu, Pause_Menu, Game_Over_Menu
 from utils.functions import load_image, text_object
 from utils import colors
@@ -13,6 +12,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = load_image("sust.png")
         self.rect = self.image.get_rect(midbottom=(400,590))
+        self.mask = pygame.mask.from_surface(self.image)
         self.imageWidth = 100
         self.imageHeight = 100
 
@@ -67,6 +67,8 @@ class Obstacles(pygame.sprite.Sprite):
             self.top = -500
             self.rect = self.image.get_rect(midtop=(randint(50, 750), self.top))
             self.speed = 9
+
+        self.mask = pygame.mask.from_surface(self.image)
 
 
     def update(self):
@@ -130,7 +132,7 @@ class Game():
             self.obstacleGroup.add(Obstacles(obs))
 
     def collision(self):
-        if pygame.sprite.spritecollide(self.player.sprite, self.obstacleGroup, True):
+        if pygame.sprite.spritecollide(self.player.sprite, self.obstacleGroup, True, pygame.sprite.collide_mask):
             pygame.mixer.music.stop()
             pygame.mixer.Sound.play(self.crashSound)
             time.sleep(1)

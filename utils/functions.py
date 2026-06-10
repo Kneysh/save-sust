@@ -6,7 +6,6 @@ FONT_LOC = "assets/fonts/"
 # image loading
 def load_image(path):
     img = pygame.image.load(IMG_LOC + path).convert_alpha()
-    img.set_colorkey((0, 0, 0))     # makes black background transparent
     return img
 
 # text render
