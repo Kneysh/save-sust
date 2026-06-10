@@ -4,7 +4,7 @@ from utils.functions import text_object, draw_block
 
 
 class Button():
-    def __init__(self, width=100, height=50, activeColor=colors.lightBlue, inactiveColor=colors.blue, bgImg=None, pos=(0,0), text="Button", textSize=20, textFont="Roboto", textColor=colors.textColor):
+    def __init__(self, width=100, height=50, activeColor=colors.baseColor, inactiveColor=colors.blue, bgImg=None, pos=(0,0), text="Button", textSize=20, textFont="Roboto", textColor=colors.textColor):
         self.width = width
         self.height = height
         self.activeColor = activeColor
@@ -29,7 +29,7 @@ class Button():
         if self.bgImg:
             surface.blit(self.bgImg, self.imgRect)
         else:
-            draw_block(surface, self.pos[0], self.pos[1], self.width, self.height, self.inactiveColor if self.inButton() else self.activeColor)
+            draw_block(surface, self.pos[0], self.pos[1], self.width, self.height, self.activeColor if self.inButton() else self.inactiveColor)
         
         self.textSurf, self.textRect =  text_object(self.text, self.textFont, self.textSize, self.textColor)
         self.textRect.center = ((self.pos[0] + (self.width / 2)), (self.pos[1] + (self.height / 2)))
