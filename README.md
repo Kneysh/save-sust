@@ -7,6 +7,8 @@ Save Sust is an arcade-style game where you dodge falling missiles and bombs, ke
 - Smooth top-down and left-right movement with keyboard controls
 - Start, pause, and game-over menus
 - Persistent high score
+- Coin collection system with silver, gold, and money pickups
+- Running wallet display in the HUD and game-over screen
 - Simple Pygame CE-based project structure that is easy to extend
 
 ## Requirements
@@ -48,11 +50,11 @@ python game.py
 
 ## How To Play
 
-Your goal is to survive as long as possible while the survival-time increases.
+Your goal is to survive as long as possible while the survival-time increases and collect as many coins as you can along the way.
 
 ### Controls
 
-- `S` at the start screen: begin the game
+- `S` at the start screen or the Save button: begin the game
 - `L` at any menu: quit the game
 - Arrow keys: move the player up, down, left, and right
 - `Space` or `K` during gameplay: pause the game and resume play
@@ -61,7 +63,12 @@ Your goal is to survive as long as possible while the survival-time increases.
 ### Gameplay Notes
 
 - Avoid the falling missiles and bombs.
+- Collect falling prizes to increase your wallet:
+  - `silverCoin`: $25
+  - `goldCoin`: $50
+  - `money`: $100
 - The survival time increases automatically while you are alive.
+- Your current wallet is shown in the bottom-right HUD and again on the game-over screen.
 - If you collide with an obstacle, SUST gets destroyed and the game ends.
 
 ## Project Structure
