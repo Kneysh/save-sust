@@ -1,6 +1,6 @@
 import pygame
 import time
-from random import randint
+from random import randint, choice
 from utils.menu import Start_Menu, Pause_Menu, Game_Over_Menu
 from utils.functions import load_image, text_object
 from utils.highest_time import Highest_Time
@@ -83,6 +83,30 @@ class Obstacles(pygame.sprite.Sprite):
             self.rect.midbottom = (randint(*self.rangeX), -10)
 
 
+# prizes class
+class Prizes(pygame.sprite.Sprite):
+    def __init__(self, prize:str, displayWidth:int, displayHeight:int):
+        super().__init__()
+        self.displayWidth, self.displayHeight = displayWidth, displayHeight
+        self.rangeX = (50, (displayWidth - 50))
+        self.speed = 5
+
+        if prize == "money":
+            self.image = load_image("money.png")
+        elif prize == "goldCoin":
+            self.image = load_image("gold_coin.png")
+        elif prize == "silverCoin":
+            self.image = load_image("silver_coin.png")
+        
+        self.rect = self.image.get_rect(midtop=(randint(*self.rangeX), -300))
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self):
+        self.rect.top += self.speed
+        if self.rect.top > self.displayHeight:
+            self.kill()
+
+
 
 # main game
 class Game():
@@ -103,6 +127,7 @@ class Game():
         pygame.mixer.init()
         pygame.mixer.music.load("assets/sounds/bgm.mp3")
         self.crashSound = pygame.mixer.Sound("assets/sounds/crash.wav")
+        self.collectCoins = pygame.mixer.Sound("assets/sounds/collect_points.mp3")
 
         # frame-per-second
         self.clock = pygame.time.Clock()
@@ -116,6 +141,8 @@ class Game():
 
 
         # groups
+        self.prizeGroup = pygame.sprite.Group()
+
         self.obstacleGroup = pygame.sprite.Group()
         self.spawn_obstacles()
 
@@ -125,6 +152,10 @@ class Game():
         self.x_change = 0
         self.y_change = 0
         self.playerSpeed = 5
+
+        # timer
+        self.prizeTimer = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.prizeTimer, 5000)
 
         # scores
         self.highestTime = Highest_Time().load_highest()
@@ -154,6 +185,13 @@ class Game():
             pygame.mixer.Sound.play(self.crashSound)
             time.sleep(1)
             self.obstacleGroup.empty()
+            self.prizeGroup.empty()
+            return True
+        return False
+    
+    def collection(self):
+        if pygame.sprite.spritecollide(self.player.sprite, self.prizeGroup, True, pygame.sprite.collide_mask):
+            pygame.mixer.Sound.play(self.collectCoins)
             return True
         return False
 
@@ -246,6 +284,9 @@ class Game():
                     if event.key == pygame.K_SPACE or event.key == pygame.K_k:
                         self.pause()
 
+                if event.type == self.prizeTimer:
+                    self.prizeGroup.add(Prizes(choice(["silverCoin", "goldCoin", "money", "goldCoin", "silverCoin"]), self.displayWidth, self.displayHeight))
+
             # moving background
             self.backgroundRect = self.background.get_rect(topleft = (0, self.backgroundY))
             self.screen.blit(self.background, self.backgroundRect)
@@ -270,6 +311,11 @@ class Game():
                 self.gameOver = self.menu_screen(name="over")
                 pygame.mixer.music.play(-1)
 
+            # prizes
+            self.prizeGroup.draw(self.screen)
+            self.prizeGroup.update()
+
+            self.collection()
 
             # score-card
             self.display_score()
