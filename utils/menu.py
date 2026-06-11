@@ -15,10 +15,10 @@ class Menu():
 
         self.message = Message()
         self.message.text = message
-        self.message.pos = (400, 200)
+        self.message.pos = (400, 300)
         
-        self.btnOne = Button(pos=(150, 450))
-        self.btnTwo = Button(pos=(550, 450))
+        self.btnOne = Button(pos=(150, 550))
+        self.btnTwo = Button(pos=(550, 550))
         self.btnTwo.text = "Let Die"
         self.btnTwo.textColor = colors.baseColor
         self.btnTwo.activeColor = colors.red
@@ -48,6 +48,7 @@ class Game_Over_Menu(Menu):
 
         self.message.color = colors.red
         self.message.size = 80
+        self.message.pos = (400, 200)
 
         self.btnOne.text = "Retry"
 
@@ -59,7 +60,7 @@ class Game_Over_Menu(Menu):
         self.finalTime.font = "Orbitron"
         self.finalTime.size = 30
         self.finalTime.color = colors.textColor
-        self.finalTime.pos = (400, 350)
+        self.finalTime.pos = (400, 400)
 
         self.finalTime.render(surface)
 

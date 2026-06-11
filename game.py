@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.displayWidth, self.displayHeight = displayWidth, displayHeight
 
         self.image = load_image("sust.png")
-        self.initPos = ((self.displayWidth / 2), (self.displayHeight - 10))
+        self.initPos = ((self.displayWidth / 2), (self.displayHeight - 50))
         self.rect = self.image.get_rect(midbottom=self.initPos)
         self.mask = pygame.mask.from_surface(self.image)
         self.imageWidth = 100
@@ -42,8 +42,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.left += self.x_change
         self.rect.top += self.y_change
 
-        if self.rect.bottom >= self.displayHeight:
-            self.rect.bottom = self.displayHeight
+        if self.rect.bottom >= self.displayHeight - 35:
+            self.rect.bottom = self.displayHeight - 35
         if self.rect.right >= self.displayWidth:
             self.rect.right = self.displayWidth
         if self.rect.top <= 0:
@@ -91,7 +91,7 @@ class Game():
 
         # display
         self.displayWidth = 800
-        self.displayHeight = 600
+        self.displayHeight = 800
         
         pygame.display.set_caption("Save Sust")
         self.screen = pygame.display.set_mode((self.displayWidth, self.displayHeight))
@@ -135,7 +135,12 @@ class Game():
     def display_score(self):
         self.totalTime += (1 / 60)
         scoreSurf, scoreRect = text_object(f"Survived: {int(self.totalTime)} s", "Orbitron", 20, colors.textColor)
-        scoreRect.topleft = (10, 5)
+        # scoreRect.topleft = (10, 5)
+        scoreRect.bottomleft = (10, (self.displayHeight - 5))
+
+        scoreBoxHeight = 35
+        scoreBox = pygame.Rect(0, (self.displayHeight -scoreBoxHeight), self.displayWidth, scoreBoxHeight)
+        pygame.draw.rect(self.screen, colors.baseColor, scoreBox)
 
         self.screen.blit(scoreSurf, scoreRect)
 
@@ -275,3 +280,4 @@ class Game():
 
 if __name__ == "__main__":
     Game().run()
+
