@@ -15,6 +15,6 @@ def text_object(text, font, size, color):
     return textSurf, textSurf.get_rect()
 
 # drawing block
-def draw_block(surface, x_pos, y_pos, width, height, color):
-    pygame.draw.rect(surface, color, [x_pos, y_pos, width, height])
+def draw_block(surface, x_pos, y_pos, width, height, color, borderRadius=0):
+    pygame.draw.rect(surface, color, [x_pos, y_pos, width, height], border_radius=borderRadius)
 

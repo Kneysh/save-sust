@@ -189,10 +189,10 @@ class Game():
                         self.quit_game()
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if menu.btnOne.inButton():
+                    if menu.btnOne.in_button():
                         self.reset()
                         return False
-                    if menu.btnTwo.inButton():
+                    if menu.btnTwo.in_button():
                         self.quit_game()
             
             pygame.display.update()
@@ -217,10 +217,10 @@ class Game():
                         self.quit_game()
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if menu.btnOne.inButton():
+                    if menu.btnOne.in_button():
                         pygame.mixer.music.unpause()
                         return
-                    if menu.btnTwo.inButton():
+                    if menu.btnTwo.in_button():
                         self.quit_game()
 
             pygame.display.update()
