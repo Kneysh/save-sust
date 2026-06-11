@@ -54,9 +54,9 @@ class Game_Over_Menu(Menu):
 
 
 
-    def final_time(self, totalTime, highestTime, surface):
+    def final_time(self, surface, totalTime, highestTime, totalCoins):
         self.finalTime = Message()
-        self.finalTime.text = f"Survived: {totalTime} s\nHighest: {highestTime} s"
+        self.finalTime.text = f"Survived: {totalTime} s\nHighest: {highestTime} s\nWallet: $ {totalCoins}"
         self.finalTime.font = "Orbitron"
         self.finalTime.size = 30
         self.finalTime.color = colors.textColor

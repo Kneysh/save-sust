@@ -126,6 +126,7 @@ class Game():
         # music and sfx
         pygame.mixer.init()
         pygame.mixer.music.load("assets/sounds/bgm.mp3")
+        pygame.mixer.music.set_volume(0.5)
         self.crashSound = pygame.mixer.Sound("assets/sounds/crash.wav")
         self.collectCoins = pygame.mixer.Sound("assets/sounds/collect_points.mp3")
 
@@ -160,20 +161,24 @@ class Game():
         # scores
         self.highestTime = Highest_Time().load_highest()
         self.totalTime = 0
+        self.totalCoins = 0
 
         self.gameOver = True
 
     def display_score(self):
         self.totalTime += (1 / 60)
-        scoreSurf, scoreRect = text_object(f"Survived: {int(self.totalTime)} s", "Orbitron", 20, colors.textColor)
-        # scoreRect.topleft = (10, 5)
-        scoreRect.bottomleft = (10, (self.displayHeight - 5))
-
         scoreBoxHeight = 35
         scoreBox = pygame.Rect(0, (self.displayHeight -scoreBoxHeight), self.displayWidth, scoreBoxHeight)
         pygame.draw.rect(self.screen, colors.baseColor, scoreBox)
 
+        scoreSurf, scoreRect = text_object(f"Survived: {int(self.totalTime)} s", "Orbitron", 20, colors.textColor)
+        scoreRect.midleft = (10, (self.displayHeight - scoreBoxHeight / 2))
+
+        coinSurf, coinRect = text_object(f"Wallet: $ {self.totalCoins}", "Orbitron", 20, colors.textColor)
+        coinRect.midright = ((self.displayWidth - 10), (self.displayHeight - scoreBoxHeight / 2))
+
         self.screen.blit(scoreSurf, scoreRect)
+        self.screen.blit(coinSurf, coinRect)
 
     def spawn_obstacles(self):
         for obs in ["missile", "missile", "bomb", "missile"]:
@@ -192,6 +197,7 @@ class Game():
     def collection(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.prizeGroup, True, pygame.sprite.collide_mask):
             pygame.mixer.Sound.play(self.collectCoins)
+            self.totalCoins += 50
             return True
         return False
 
@@ -206,6 +212,8 @@ class Game():
         self.backgroundY = self.displayHeight - self.backgroundHeight
         self.player.empty()
         self.player.add(Player(self.displayWidth, self.displayHeight))
+        self.prizeGroup.empty()
+        self.totalCoins = 0
 
     def menu_screen(self, name):
         self.screen.blit(self.background, (0, 0))
@@ -217,7 +225,7 @@ class Game():
                 if self.totalTime > self.highestTime:
                     self.highestTime = int(self.totalTime)
                     Highest_Time().save_highest(self.highestTime)
-                menu.final_time(str(int(self.totalTime)), str(self.highestTime), self.screen)
+                menu.final_time(self.screen, str(int(self.totalTime)), str(self.highestTime), str(self.totalCoins))
             menu.render(self.screen)
 
             for event in pygame.event.get():
