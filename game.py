@@ -90,6 +90,11 @@ class Prizes(pygame.sprite.Sprite):
         self.displayWidth, self.displayHeight = displayWidth, displayHeight
         self.rangeX = (50, (displayWidth - 50))
         self.speed = 5
+        self.points = {
+            "money": 100,
+            "goldCoin": 50,
+            "silverCoin": 25,
+        }.get(prize, 0)
 
         if prize == "money":
             self.image = load_image("money.png")
@@ -195,9 +200,12 @@ class Game():
         return False
     
     def collection(self):
-        if pygame.sprite.spritecollide(self.player.sprite, self.prizeGroup, True, pygame.sprite.collide_mask):
+        collidedPrizes = pygame.sprite.spritecollide(self.player.sprite, self.prizeGroup, True, pygame.sprite.collide_mask)
+
+        if collidedPrizes:
             pygame.mixer.Sound.play(self.collectCoins)
-            self.totalCoins += 50
+            for prize in collidedPrizes:
+                self.totalCoins += prize.points
             return True
         return False
 
@@ -322,7 +330,7 @@ class Game():
             # prizes
             self.prizeGroup.draw(self.screen)
             self.prizeGroup.update()
-
+            # check for prize collection
             self.collection()
 
             # score-card
