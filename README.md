@@ -80,8 +80,11 @@ Your goal is to survive as long as possible while the survival-time increases an
 ## Screenshots
 
 ![Start menu](assets/images/start_menu.png)
+
 ![Gameplay](assets/images/gameplay.png)
+
 ![Pause menu](assets/images/pause_menu.png)
+
 ![Game Over menu](assets/images/game_over_menu.png)
 
 
